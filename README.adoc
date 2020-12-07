@@ -1,0 +1,44 @@
+install the root pom:
+
+`$ mvn install`
+
+the example1 and example2 practise has implemented by following two files.
+src/main/java/org/apache/camel/example/springboot/CamelRouter.java
+src/main/java/org/apache/camel/example/springboot/MyRouter.java
+
+=== Build
+
+You can build this example using:
+
+    $ mvn package
+
+=== Run
+
+You can run this example using:
+
+    $ mvn spring-boot:run
+
+1.test the properties and headers run, and check the log output.
+http://localhost:8080/api/say/hello
+
+2.test choice components using
+http://localhost:8080/api/testChoice/hello
+http://localhost:8080/api/testChoice/welcome
+http://localhost:8080/api/testChoice/demo
+
+3.test example 1 and exmaple 2 practise run
+    sent orginal json file with rest get with http://localhost:8080/api/SendMessage to log and activemq SAMPLEQUEUE
+    from activemq SAMPLEQUEUE recieve the original json, and process the json string, and use fastjson to parse to java object SampleMsg
+    and split the java object SampleMsg into new java object ResultMsg and add this ResultMsg into List and send to endpoint "direct:testSplit"
+    from the "direct:testSplit" iterator the list collection contain the items by split()
+
+http://localhost:8080/api/SendMessage
+
+the output should be list as below:
+2020-12-07 14:23:37.273  INFO 1412 --- [  XNIO-1 task-1] route12                                  : sent message body is "{\"items\":[{\"description\":\"java\",\"itemNo\":7},{\"description\":\"python\",\"itemNo\":2},{\"description\":\"js\",\"itemNo\":11}],\"order\":10101,\"customer\":\"lelewang\",\"customerNo\":11101}"
+2020-12-07 14:23:37.330  INFO 1412 --- [er[SAMPLEQUEUE]] route13                                  : Recieved message {"items":[{"description":"java","itemNo":7},{"description":"python","itemNo":2},{"description":"js","itemNo":11}],"order":10101,"customer":"lelewang","customerNo":11101}
+2020-12-07 14:23:37.431  INFO 1412 --- [er[SAMPLEQUEUE]] route14                                  : test split ResultMsg(order=10101, customer=lelewang, customerNo=11101, item=Item(itemNo=7, description=java))
+2020-12-07 14:23:37.432  INFO 1412 --- [er[SAMPLEQUEUE]] route14                                  : test split ResultMsg(order=10101, customer=lelewang, customerNo=11101, item=Item(itemNo=2, description=python))
+2020-12-07 14:23:37.432  INFO 1412 --- [er[SAMPLEQUEUE]] route14                                  : test split ResultMsg(order=10101, customer=lelewang, customerNo=11101, item=Item(itemNo=11, description=js))
+
+4,test files, add any file into the input_box folder and check the output2_box folder
